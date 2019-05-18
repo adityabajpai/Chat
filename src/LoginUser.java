@@ -20,7 +20,7 @@ public class LoginUser extends JFrame implements ActionListener {
         setSize(700, 700);
         setLayout(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle("Register Yourself");
+        setTitle("Login");
         l1 = new JLabel("Login Form in Windows Form:");
         l2 = new JLabel("E-mail");
         l3 = new JLabel("Password");
@@ -91,18 +91,32 @@ public class LoginUser extends JFrame implements ActionListener {
                     Class.forName("com.mysql.cj.jdbc.Driver");
                     Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/chat","root","root");
 //                    PreparedStatement ps = con.prepareStatement("insert into user (name,email,pswd,country,state,mobile) values(?,?,?,?,?,?)");
-                    PreparedStatement ps = con.prepareStatement("select * from user where name = ?");
+                    PreparedStatement ps = con.prepareStatement("select pswd from user where email = ?");
                     ps.setString(1, s1);
                     ResultSet rs = ps.executeQuery();
                     x++;
-                    if (x > 0)
-                    {
-                        String pswd = rs.getString("pswd");
-                        JOptionPane.showMessageDialog(btn1, pswd);
+//                    if (x > 0)
+//                    {
+//                        String pswd = rs.getString("pswd");
+//                        JOptionPane.showMessageDialog(btn1, pswd);
+////                        JOptionPane.showMessageDialog(btn1, pswd);
+//                    }
+                    if(rs.next()){
+                        String pswd = rs.getString(1);
+                        if(pswd.equals(s8)) {
+                            JOptionPane.showMessageDialog(btn1, "Successfully Login");
+                            dispose();
+                            FriendUser friendUser = new FriendUser();
+                            friendUser.setVisible(true);
+                        }
+                        else{
+                            JOptionPane.showMessageDialog(btn1, "Password doesn't match");
+                        }
                     }
                 }
                 catch (Exception ex)
                 {
+                    JOptionPane.showMessageDialog(btn1, "You are not registered");
                     System.out.println(ex);
                 }
             }
