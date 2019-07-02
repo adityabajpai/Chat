@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_chatroom" default="compile.module.chatroom">
+  <dirname property="module.chatroom.basedir" file="${ant.file.module_chatroom}"/>
+  
+  <property name="module.jdk.home.chatroom" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.chatroom" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.chatroom" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.chatroom" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="chatroom.output.dir" value="${module.chatroom.basedir}/out/production/ChatRoom"/>
+  <property name="chatroom.testoutput.dir" value="${module.chatroom.basedir}/out/test/ChatRoom"/>
+  
+  <path id="chatroom.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="chatroom.module.production.classpath">
+    <path refid="${module.jdk.classpath.chatroom}"/>
+    <path refid="library.tomcat_9.0.10.classpath"/>
+  </path>
+  
+  <path id="chatroom.runtime.production.module.classpath">
+    <pathelement location="${chatroom.output.dir}"/>
+  </path>
+  
+  <path id="chatroom.module.classpath">
+    <path refid="${module.jdk.classpath.chatroom}"/>
+    <pathelement location="${chatroom.output.dir}"/>
+    <path refid="library.tomcat_9.0.10.classpath"/>
+  </path>
+  
+  <path id="chatroom.runtime.module.classpath">
+    <pathelement location="${chatroom.testoutput.dir}"/>
+    <pathelement location="${chatroom.output.dir}"/>
+    <path refid="library.tomcat_9.0.10.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.chatroom">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.chatroom">
+    <patternset refid="excluded.from.module.chatroom"/>
+  </patternset>
+  
+  <path id="chatroom.module.sourcepath">
+    <dirset dir="${module.chatroom.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.chatroom" depends="compile.module.chatroom.production,compile.module.chatroom.tests" description="Compile module ChatRoom"/>
+  
+  <target name="compile.module.chatroom.production" depends="register.custom.compilers" description="Compile module ChatRoom; production classes">
+    <mkdir dir="${chatroom.output.dir}"/>
+    <javac2 destdir="${chatroom.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.chatroom}/javac">
+      <compilerarg line="${compiler.args.chatroom}"/>
+      <bootclasspath refid="chatroom.module.bootclasspath"/>
+      <classpath refid="chatroom.module.production.classpath"/>
+      <src refid="chatroom.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.chatroom"/>
+    </javac2>
+    
+    <copy todir="${chatroom.output.dir}">
+      <fileset dir="${module.chatroom.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.chatroom.tests" depends="register.custom.compilers,compile.module.chatroom.production" description="compile module ChatRoom; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.chatroom" description="cleanup module">
+    <delete dir="${chatroom.output.dir}"/>
+    <delete dir="${chatroom.testoutput.dir}"/>
+  </target>
+</project>

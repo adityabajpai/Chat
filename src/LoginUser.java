@@ -14,6 +14,7 @@ public class LoginUser extends JFrame implements ActionListener {
     JTextField tf1, tf2, tf5, tf6, tf7;
     JButton btn1, btn2;
     JPasswordField p1, p2;
+    String s1;
     LoginUser()
     {
         setVisible(true);
@@ -77,7 +78,7 @@ public class LoginUser extends JFrame implements ActionListener {
         });
         btn1.addActionListener(e -> {
             int x = 0;
-            String s1 = tf1.getText();
+            s1 = tf1.getText();
             char[] s3 = p1.getPassword();
             String s8 = new String(s3);
             if(s1.equals("")||s8.equals(""))
@@ -104,9 +105,10 @@ public class LoginUser extends JFrame implements ActionListener {
                     if(rs.next()){
                         String pswd = rs.getString(1);
                         if(pswd.equals(s8)) {
-                            JOptionPane.showMessageDialog(btn1, "Successfully Login");
+                            JOptionPane.showMessageDialog(null,"Welcome:"+s1);
+//                            JOptionPane.showMessageDialog(btn1, "Successfully Login");
                             dispose();
-                            FriendUser friendUser = new FriendUser();
+                            FriendUser friendUser = new FriendUser(s1);
                             friendUser.setVisible(true);
                         }
                         else{
